@@ -1,0 +1,46 @@
+# Informações do site
+site_name: DoaJF - Documentação Oficial
+site_description: 'Documentação técnica do projeto DoaJF, desenvolvido para a disciplina de Interação Humano-Computador (DCC174).'
+site_author: 'Daniel Fagundes'
+repo_url: https://github.com/DanielPortes/doajf-app
+
+# Configuração do tema
+theme:
+  name: material
+  language: pt
+  logo: logo-ufjf.png
+  favicon: logo-ufjf.png
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Mudar para modo escuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Mudar para modo claro
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.copy
+    - content.code.annotate
+
+nav:
+  - 'Início': index.md
+  - 'Guia de Uso':
+      - 'Visão Geral': user-guide.md
+  - 'Desenvolvimento':
+      - 'Primeiros Passos': getting-started.md
+      - 'Arquitetura': architecture.md
+      - 'Deployment': deployment.md
