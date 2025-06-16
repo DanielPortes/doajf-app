@@ -20,21 +20,31 @@ const DonationForm = () => {
 
         await new Promise(resolve => setTimeout(resolve, 500));
 
-        const { error } = await supabase.from('donations').insert({
+        const { data: donationData, error } = await supabase.from('donations').insert({
             donor_name: formData.name,
             donor_contact: formData.contact,
             quantity: Number(formData.quantity),
-        });
+        }).select().single();
 
         if (error) {
             setMessage({ type: 'error', text: 'Erro ao registrar doação. Verifique os dados e tente novamente.' });
         } else {
-            setMessage({ type: 'success', text: 'Doação registrada com sucesso! Agradecemos imensamente sua contribuição.' });
+
+            const { data: stats, error: statsError } = await supabase.rpc('get_donations_stats').single();
+
+            if (statsError) {
+
+                setMessage({ type: 'success', text: 'Doação registrada com sucesso! Agradecemos imensamente sua contribuição.' });
+            } else {
+
+                const successMessage = `Sua doação de ${donationData.quantity} cesta(s) foi registrada! Você se juntou a uma comunidade que já doou um total de ${stats.total_quantity} cestas. Muito obrigado!`;
+                setMessage({ type: 'success', text: successMessage });
+            }
+
             setFormData({ name: '', contact: '', quantity: '1' });
         }
         setLoading(false);
     };
-
     return (
         <div className="w-full max-w-lg bg-white p-8 rounded-xl shadow-lg border border-gray-200 text-left">
             <h2 className="text-3xl font-bold text-center text-primary-700 mb-8">Registre sua Doação</h2>

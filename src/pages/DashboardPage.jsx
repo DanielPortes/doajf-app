@@ -1,10 +1,11 @@
-
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { supabase } from '../services/supabaseClient';
 import DonationsTable from '../components/DonationsTable';
 import StatusUpdateModal from '../components/StatusUpdateModal';
 import Spinner from '../components/Spinner';
 import { MagnifyingGlassIcon, FunnelIcon, InboxIcon, CheckCircleIcon, CubeIcon } from '@heroicons/react/24/solid';
+import { Link } from 'react-router-dom';
+import { ChartBarIcon } from '@heroicons/react/24/solid';
 
 const DashboardPage = () => {
     const [donations, setDonations] = useState([]);
@@ -73,9 +74,15 @@ const DashboardPage = () => {
         <div className="space-y-8">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                 <h1 className="text-3xl font-bold text-gray-900">Painel de Doações</h1>
-
+                {}
+                <Link
+                    to="/admin/analytics"
+                    className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors shadow-sm"
+                >
+                    <ChartBarIcon className="h-5 w-5" />
+                    Ver Análises
+                </Link>
             </div>
-
             {}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div onClick={() => setStatusFilter('Aguardando Contato')} className="p-4 bg-white rounded-lg shadow-sm border border-yellow-300 flex items-center gap-4 cursor-pointer hover:bg-yellow-50">
