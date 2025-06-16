@@ -1,11 +1,10 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabaseClient';
 import DonationsTable from '../components/DonationsTable';
 import StatusUpdateModal from '../components/StatusUpdateModal';
 import Spinner from '../components/Spinner';
-import { ArrowLeftOnRectangleIcon, MagnifyingGlassIcon, FunnelIcon, InboxIcon, CheckCircleIcon, CubeIcon } from '@heroicons/react/24/solid';
+import { MagnifyingGlassIcon, FunnelIcon, InboxIcon, CheckCircleIcon, CubeIcon } from '@heroicons/react/24/solid';
 
 const DashboardPage = () => {
     const [donations, setDonations] = useState([]);
@@ -14,7 +13,6 @@ const DashboardPage = () => {
     const [currentDonation, setCurrentDonation] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('Todos');
-    const navigate = useNavigate();
 
     const fetchDonations = useCallback(async () => {
         setLoading(true);
@@ -47,10 +45,7 @@ const DashboardPage = () => {
         };
     }, [donations]);
 
-    const handleLogout = async () => {
-        await supabase.auth.signOut();
-        navigate('/login');
-    };
+
 
     const handleOpenModal = (donation) => {
         setCurrentDonation(donation);
@@ -78,10 +73,7 @@ const DashboardPage = () => {
         <div className="space-y-8">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                 <h1 className="text-3xl font-bold text-gray-900">Painel de Doações</h1>
-                <button onClick={handleLogout} className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 bg-white border border-gray-300 text-text-primary font-semibold text-sm rounded-lg hover:bg-slate-100 transition-colors shadow-sm">
-                    <ArrowLeftOnRectangleIcon className="h-5 w-5" />
-                    Sair
-                </button>
+
             </div>
 
             {}
