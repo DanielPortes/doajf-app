@@ -2,6 +2,7 @@
 import { fontFamily } from 'tailwindcss/defaultTheme'
 
 export default {
+    darkMode: 'class', // Habilita o modo escuro baseado em classe
     content: [
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
@@ -39,7 +40,6 @@ export default {
                     500: '#f59e0b',
                     800: '#b45309'
                 },
-                // Cores para textos e fundos
                 'text-primary': '#1f2937', // gray-800
                 'text-secondary': '#6b7280', // gray-500
             }
