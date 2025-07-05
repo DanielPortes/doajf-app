@@ -1,7 +1,8 @@
+// Arquivo: src/components/DonationsTable.jsx
+
 import StatusBadge from './StatusBadge';
 import { PencilSquareIcon } from '@heroicons/react/24/solid';
 import { motion } from 'framer-motion';
-
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -28,9 +29,15 @@ const DonationsTable = ({ donations, onOpenModal }) => {
             <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead className="bg-slate-100 dark:bg-gray-700/50">
-                    {}
+                    {/* CORREÇÃO: Adicionados os cabeçalhos que estavam faltando */}
+                    <tr>
+                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Doador</th>
+                        <th className="px-6 py-3 text-left text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Contato</th>
+                        <th className="px-6 py-3 text-center text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Qtde.</th>
+                        <th className="px-6 py-3 text-center text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-center text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Ação</th>
+                    </tr>
                     </thead>
-                    {}
                     <motion.tbody
                         className="divide-y divide-gray-200 dark:divide-gray-700"
                         variants={containerVariants}
@@ -38,7 +45,6 @@ const DonationsTable = ({ donations, onOpenModal }) => {
                         animate="visible"
                     >
                         {donations.map((donation, index) => (
-
                             <motion.tr
                                 key={donation.id}
                                 variants={itemVariants}
