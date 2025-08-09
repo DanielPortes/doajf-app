@@ -4,7 +4,6 @@ import Alert from './Alert';
 import Button from './Button';
 import Confetti from './Confetti';
 import { UserIcon, EnvelopeIcon, GiftIcon } from '@heroicons/react/24/solid';
-
 import { AnimatePresence, motion } from 'framer-motion';
 import clsx from 'clsx';
 
@@ -13,27 +12,22 @@ const DonationForm = () => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
     const [showConfetti, setShowConfetti] = useState(false);
-
     const [errors, setErrors] = useState({});
     const [isTouched, setIsTouched] = useState(false);
 
     const validate = (data) => {
         const newErrors = {};
-
         if (!data.name || data.name.trim().length < 3) {
             newErrors.name = 'O nome deve ter pelo menos 3 caracteres.';
         }
-
         if (!data.contact) {
             newErrors.contact = 'O contato é obrigatório.';
         } else if (!/(@|(\d{5,}))/.test(data.contact)) {
             newErrors.contact = 'Por favor, insira um e-mail ou telefone válido.';
         }
-
         if (!data.quantity || Number(data.quantity) < 1) {
             newErrors.quantity = 'A quantidade mínima é 1.';
         }
-
         return newErrors;
     };
 
@@ -54,7 +48,6 @@ const DonationForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsTouched(true);
-
         const formErrors = validate(formData);
         if (Object.keys(formErrors).length > 0) {
             setErrors(formErrors);
@@ -65,16 +58,30 @@ const DonationForm = () => {
         setMessage({ type: '', text: '' });
         setShowConfetti(false);
 
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // <<< CORREÇÃO 1: Detectar se estamos no ambiente do Storybook.
+        // O Storybook geralmente roda na porta 6006.
+        const isStorybook = window.location.href.includes('localhost:6006');
 
-        const { error } = await supabase.rpc('create_donation', {
-            donation_data: {
-                donor_name: formData.name,
-                donor_contact: formData.contact,
-                quantity: Number(formData.quantity)
-            }
-        });
+        let error = null;
 
+        // <<< CORREÇÃO 2: Lógica condicional para a chamada de API.
+        if (isStorybook) {
+            // Se for o Storybook, simule um envio bem-sucedido após um pequeno atraso.
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            // O `error` permanece `null`, simulando sucesso.
+        } else {
+            // Se for a aplicação real, faça a chamada de verdade para o Supabase.
+            const { error: rpcError } = await supabase.rpc('create_donation', {
+                donation_data: {
+                    donor_name: formData.name,
+                    donor_contact: formData.contact,
+                    quantity: Number(formData.quantity)
+                }
+            });
+            error = rpcError;
+        }
+
+        // <<< CORREÇÃO 3: A lógica de feedback agora funciona em ambos os ambientes.
         if (error) {
             console.error('Erro ao registrar doação:', error);
             setMessage({ type: 'error', text: 'Erro ao registrar doação. Verifique os dados e tente novamente.' });
@@ -85,6 +92,7 @@ const DonationForm = () => {
             setErrors({});
             setIsTouched(false);
         }
+
         setLoading(false);
     };
 
@@ -92,9 +100,8 @@ const DonationForm = () => {
         <div className="w-full max-w-lg bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 text-left">
             {showConfetti && <Confetti onComplete={() => setShowConfetti(false)} />}
             <h2 className="text-3xl font-bold text-center text-primary-700 dark:text-primary-500 mb-8">Registre sua Doação</h2>
-
             <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-                {}
+                {/* Name Field */}
                 <div>
                     <label htmlFor="name" className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">Nome ou Empresa</label>
                     <div className="relative">
@@ -126,7 +133,7 @@ const DonationForm = () => {
                     </AnimatePresence>
                 </div>
 
-                {}
+                {/* Contact Field */}
                 <div>
                     <label htmlFor="contact" className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">E-mail ou Telefone</label>
                     <div className="relative">
@@ -158,7 +165,7 @@ const DonationForm = () => {
                     </AnimatePresence>
                 </div>
 
-                {}
+                {/* Quantity Field */}
                 <div>
                     <label htmlFor="quantity" className="block text-sm font-medium text-text-primary dark:text-gray-300 mb-1">Quantidade de Cestas Básicas</label>
                     <div className="relative">
@@ -189,12 +196,10 @@ const DonationForm = () => {
                         )}
                     </AnimatePresence>
                 </div>
-
                 <Button type="submit" loading={loading} icon={GiftIcon} className="w-full">
                     {loading ? 'Enviando...' : 'Quero Doar Agora'}
                 </Button>
             </form>
-
             <AnimatePresence>
                 {message.text && <Alert type={message.type} message={message.text} />}
             </AnimatePresence>

@@ -38,3 +38,6 @@ dist-ssr
 
 # Arquivos de sistema operacional
 Thumbs.db
+
+*storybook.log
+storybook-static
